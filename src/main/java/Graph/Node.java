@@ -66,7 +66,7 @@ public class Node<T>{
     }
 
 
-    protected boolean add(int id, Relation<T> relation) {
+    protected boolean add(int id, AbstractRelation relation) {
         return false;
     }
 
@@ -80,7 +80,7 @@ public class Node<T>{
      * @param key The node's id
      * @return List of Relation objects
      */
-    public List<Relation<T>> relations(int key) {
+    public List<AbstractRelation> relations(int key) {
         return null;
     }
 

@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 abstract public class AbstractGraph<T extends Node<K>, K> {
 
-    protected HashMap<Integer, T> graph = new HashMap<>();;
+    protected HashMap<Integer, T> graph = new HashMap<>();
 
     protected final AtomicInteger atomicId = new AtomicInteger();
 
@@ -48,13 +48,7 @@ abstract public class AbstractGraph<T extends Node<K>, K> {
         return id;
     }
 
-    /**
-     * Creates two nodes and connects them together
-     * @param firstElement The data of the first node
-     * @param secondElement The data of the second node
-     * @param relation Relation object to describe the relation between the nodes
-     */
-    public void add(K firstElement, K secondElement,Relation<K> relation){
+    public void add(K firstElement, K secondElement, AbstractRelation relation){
 
         if(firstElement == null || secondElement == null){
             throw new NoElementException("Graph add(T firstElement, T secondElement) : elements cannot be null");
@@ -71,13 +65,14 @@ abstract public class AbstractGraph<T extends Node<K>, K> {
         this.totalRelations++;
     }
 
+
     /**
      * Creates an edge between two nodes, does <b>nothing</b> if node does not exist
      * @param u The first node's id
      * @param v The second node's od
      * @param relation Relation object to describe the relation between the nodes
      */
-    public void addEdge(int u, int v,Relation<K> relation){
+    public void addEdge(int u, int v, AbstractRelation relation){
 
         checkOutOfBound(u,v,"addEdge(int u, int v...)");
 
@@ -291,9 +286,9 @@ abstract public class AbstractGraph<T extends Node<K>, K> {
 
                 for(Integer relationKey : iterator ){
 
-                    List<Relation<K>> relations = node.relations(relationKey);
+                    List<AbstractRelation> relations = node.relations(relationKey);
 
-                    for(Relation<K> relation :  relations){
+                    for(AbstractRelation relation :  relations){
                         System.out.printf("( %d %s %d ) ",key, relation.printDirection(),relationKey);
                     }
 
@@ -499,7 +494,7 @@ abstract public class AbstractGraph<T extends Node<K>, K> {
     /**
      * Returns all nodes in this graph adjacent to node
      * which can be reached by traversing node's <i>incoming</i>
-     * edges (RIGHT TO LEFT or UNI DIRECTION or NO DIRECTION) .
+     * edges (INCOMING or UNI DIRECTION or NO DIRECTION) .
      *
      * @param id The node's id
      * @param includeSelf whether to include loop relations or not
@@ -508,8 +503,8 @@ abstract public class AbstractGraph<T extends Node<K>, K> {
      */
     public Set<T> predecessors(int id, boolean includeSelf){
 
-        Predicate<Relation<K>> filter =
-                rel -> rel.direction() != Direction.LEFT_TO_RIGHT;
+        Predicate<AbstractRelation> filter =
+                rel -> rel.direction() != Direction.OUT_GOING;
 
 
         return getRelationNodes(id,includeSelf, filter);
@@ -518,7 +513,7 @@ abstract public class AbstractGraph<T extends Node<K>, K> {
     /**
      * Returns all nodes in this graph adjacent to node
      * which can be reached by traversing node's <i>outgoing</i>
-     * edges (LEFT TO RIGHT or UNI DIRECTION or NO DIRECTION) .
+     * edges (OUT_GOING or UNI DIRECTION or NO DIRECTION) .
      *
      * @param id The node's id
      * @param includeSelf whether to include loop relations or not
@@ -527,13 +522,13 @@ abstract public class AbstractGraph<T extends Node<K>, K> {
      */
     public Set<T> successors(int id, boolean includeSelf){
 
-        Predicate<Relation<K>> filter =
-                rel -> rel.direction() != Direction.RIGHT_TO_LEFT;
+        Predicate<AbstractRelation> filter =
+                rel -> rel.direction() != Direction.INCOMING;
 
         return getRelationNodes(id,includeSelf, filter);
     }
 
-    private Set<T> getRelationNodes(int id, boolean includeSelf,  Predicate<Relation<K>> filter){
+    private Set<T> getRelationNodes(int id, boolean includeSelf,  Predicate<AbstractRelation> filter){
 
         T node =  graph.get(id);
 
@@ -555,7 +550,7 @@ abstract public class AbstractGraph<T extends Node<K>, K> {
 
         for(Integer relationId : nodeRelationsId){
 
-            List<Relation<K>> outGoingRelations =
+            List<AbstractRelation> outGoingRelations =
                     node
                     .relations(relationId)
                     .stream()
@@ -579,7 +574,7 @@ abstract public class AbstractGraph<T extends Node<K>, K> {
     }
 
 
-    //to do, optimize distance calculations and fix bugs
+    //to do, optimize distance calculations and fix bugs00
     public void shortestPath(int start, int target){
 
         checkOutOfBound(start, target, "shortestPath(int start, int target)");

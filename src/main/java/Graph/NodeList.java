@@ -13,7 +13,7 @@ import java.util.List;
 public class NodeList<T> extends Node<T> {
 
 
-    Multimap<Integer, Relation<T>> vertex;
+    Multimap<Integer, AbstractRelation> vertex;
 
     public NodeList() {
 
@@ -30,7 +30,7 @@ public class NodeList<T> extends Node<T> {
     }
 
     @Override
-    protected boolean add(int id, Relation<T> relation) {
+    protected boolean add(int id, AbstractRelation relation) {
 
         boolean canAddRelation = increaseRelations(1);
 
@@ -57,7 +57,7 @@ public class NodeList<T> extends Node<T> {
     }
 
     @Override
-    public List<Relation<T>> relations(int key) {
+    public List<AbstractRelation> relations(int key) {
         return vertex.get(key).stream().toList();
     }
 

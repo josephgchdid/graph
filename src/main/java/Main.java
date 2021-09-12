@@ -1,6 +1,5 @@
 import Graph.Direction;
 import Graph.GraphList;
-import Graph.GraphMap;
 import Graph.Relation;
 
 public class Main {
@@ -18,11 +17,12 @@ public class Main {
 
         int len = graph.size();
 
-        Relation<String> relation = null;
+
+        Relation<Integer> relation = null;
 
         relation = new Relation<>(
-                "Some data",
-                Direction.LEFT_TO_RIGHT);
+                1,
+                Direction.OUT_GOING);
 
         graph.addEdge(0, 1, relation);
         graph.addEdge(1,2, relation);
@@ -32,13 +32,8 @@ public class Main {
         graph.addEdge(4, 6, relation);
 
         graph.print();
-      // System.out.println(graph.predecessors(1, true));
 
-      //  System.out.println(graph.predecessors(2, true));
-
-
-        graph.shortestPath(0, 4);
-
+        System.out.println(graph.successors(2, false));
         long finish = System.currentTimeMillis();
         long timeElapsed = finish - start;
         double seconds = (double) timeElapsed / 1000;

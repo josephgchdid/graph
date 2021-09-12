@@ -8,7 +8,7 @@ import java.util.*;
  */
 public class NodeMap<T> extends Node<T> {
 
-    private HashMap<Integer, Relation<T>> vertex;
+    private HashMap<Integer, AbstractRelation> vertex;
 
     public NodeMap(){
         super();
@@ -24,7 +24,7 @@ public class NodeMap<T> extends Node<T> {
 
 
     @Override
-    protected boolean add(int id, Relation<T> relation) {
+    protected boolean add(int id, AbstractRelation relation) {
 
         boolean canAddRelation = !vertex.containsKey(id);
 
@@ -54,7 +54,7 @@ public class NodeMap<T> extends Node<T> {
     }
 
     @Override
-    public List<Relation<T>> relations(int key) {
+    public List<AbstractRelation> relations(int key) {
        return List.of(vertex.get(key));
     }
 
