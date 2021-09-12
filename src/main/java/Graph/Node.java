@@ -4,7 +4,7 @@ package Graph;
 
 import java.util.List;
 
-public class Node<T>{
+class Node<T>{
 
     private  T data;
 

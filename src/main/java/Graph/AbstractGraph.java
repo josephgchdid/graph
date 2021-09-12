@@ -6,7 +6,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-abstract public class AbstractGraph<T extends Node<K>, K> {
+abstract  class AbstractGraph<T extends Node<K>, K> {
 
     protected HashMap<Integer, T> graph = new HashMap<>();
 
@@ -188,6 +188,7 @@ abstract public class AbstractGraph<T extends Node<K>, K> {
 
         for(Integer idToRemoveFrom : iterator ){
             graph.get(idToRemoveFrom).remove(id);
+            totalRelations--;
         }
 
         graph.remove(id);
@@ -212,6 +213,7 @@ abstract public class AbstractGraph<T extends Node<K>, K> {
 
         for(Integer idToRemoveFrom : iterator ){
             graph.get(idToRemoveFrom).remove(id);
+            totalRelations--;
         }
 
         graph.remove(id);
@@ -494,7 +496,7 @@ abstract public class AbstractGraph<T extends Node<K>, K> {
     /**
      * Returns all nodes in this graph adjacent to node
      * which can be reached by traversing node's <i>incoming</i>
-     * edges (INCOMING or UNI DIRECTION or NO DIRECTION) .
+     * edges.
      *
      * @param id The node's id
      * @param includeSelf whether to include loop relations or not
@@ -504,7 +506,7 @@ abstract public class AbstractGraph<T extends Node<K>, K> {
     public Set<T> predecessors(int id, boolean includeSelf){
 
         Predicate<AbstractRelation> filter =
-                rel -> rel.direction() != Direction.OUT_GOING;
+                rel -> rel.direction() == Direction.INCOMING;
 
 
         return getRelationNodes(id,includeSelf, filter);
@@ -513,7 +515,7 @@ abstract public class AbstractGraph<T extends Node<K>, K> {
     /**
      * Returns all nodes in this graph adjacent to node
      * which can be reached by traversing node's <i>outgoing</i>
-     * edges (OUT_GOING or UNI DIRECTION or NO DIRECTION) .
+     * edges.
      *
      * @param id The node's id
      * @param includeSelf whether to include loop relations or not
@@ -523,7 +525,15 @@ abstract public class AbstractGraph<T extends Node<K>, K> {
     public Set<T> successors(int id, boolean includeSelf){
 
         Predicate<AbstractRelation> filter =
-                rel -> rel.direction() != Direction.INCOMING;
+                rel -> rel.direction() == Direction.OUT_GOING;
+
+        return getRelationNodes(id,includeSelf, filter);
+    }
+
+    public Set<T> uniDirectionEdges(int id, boolean includeSelf){
+
+        Predicate<AbstractRelation> filter =
+                rel -> rel.direction() == Direction.UNI_DIRECTION;
 
         return getRelationNodes(id,includeSelf, filter);
     }
@@ -573,7 +583,7 @@ abstract public class AbstractGraph<T extends Node<K>, K> {
                 '}';
     }
 
-
+    /* SOME DAY
     //to do, optimize distance calculations and fix bugs00
     public void shortestPath(int start, int target){
 
@@ -664,5 +674,5 @@ abstract public class AbstractGraph<T extends Node<K>, K> {
 
     private int getDistance(T node, T neighbour){
         return 1; // to do
-    }
+    }*/
 }

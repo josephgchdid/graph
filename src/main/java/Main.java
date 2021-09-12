@@ -1,6 +1,8 @@
 import Graph.Direction;
 import Graph.GraphList;
 import Graph.Relation;
+import Graph.WeightedRelation;
+
 
 public class Main {
     public static void main(String[] args){
@@ -18,22 +20,20 @@ public class Main {
         int len = graph.size();
 
 
-        Relation<Integer> relation = null;
+        Relation weightedRelation = null;
 
-        relation = new Relation<>(
-                1,
-                Direction.OUT_GOING);
+        weightedRelation = new Relation(Direction.OUT_GOING);
 
-        graph.addEdge(0, 1, relation);
-        graph.addEdge(1,2, relation);
-        graph.addEdge(2,3, relation);
-        graph.addEdge(3,4, relation);
-        graph.addEdge(4,5, relation);
-        graph.addEdge(4, 6, relation);
+        graph.addEdge(0, 1, weightedRelation);
+        graph.addEdge(1,2, weightedRelation);
+        graph.addEdge(2,3, weightedRelation);
+        graph.addEdge(3,4, weightedRelation);
+        graph.addEdge(4,5, weightedRelation);
+        graph.addEdge(4, 6, weightedRelation);
 
         graph.print();
 
-        System.out.println(graph.successors(2, false));
+        System.out.println(graph.getNode(1).relations(0));
         long finish = System.currentTimeMillis();
         long timeElapsed = finish - start;
         double seconds = (double) timeElapsed / 1000;

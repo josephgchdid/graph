@@ -68,5 +68,11 @@ abstract class AbstractRelation {
         this.relationName = relationName;
     }
 
-
+    @Override
+    public String toString() {
+        return "AbstractRelation{" +
+                "relationName='" + relationName + '\'' +
+                ", direction=" + direction +
+                '}';
+    }
 }
