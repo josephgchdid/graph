@@ -1,7 +1,4 @@
-import Graph.Direction;
-import Graph.GraphList;
-import Graph.Relation;
-import Graph.WeightedRelation;
+import Graph.*;
 
 
 public class Main {
@@ -9,31 +6,47 @@ public class Main {
 
         long start = System.currentTimeMillis();
 
-        GraphList<String> graph = new GraphList<>();
+        //create GraphList With `String` as its data type
+        GraphList<String> graph = new  GraphList<>();
 
-        int iter = 7;
-
-        for(int i = 0; i < iter; i++){
-            graph.add("index " + i);
+        //create 7 Nodes
+        for(int i = 0; i < 7; i++){
+            //add returns an int representing the node's unique id
+            graph.add("Node " + i);
         }
 
-        int len = graph.size();
+        //create an Unweighted Relation object
+        Relation unWeightedRelation = new Relation(Direction.NO_DIRECTION);
+
+        //Note: The weighted relation object can have any data type, and it can be different than the graph's data type
+
+        WeightedRelation<Integer> weightedRelation = new   WeightedRelation<>(1, Direction.OUT_GOING);
+
+        graph.addEdge(0, 1, unWeightedRelation);
+
+        unWeightedRelation.direction(Direction.OUT_GOING);
+
+        graph.addEdge(0,2,  unWeightedRelation);
+
+        //change the relation's name
+        unWeightedRelation.relationName("Related");
+
+        graph.addEdge(2,3, unWeightedRelation);
+
+        graph.addEdge(4,2, weightedRelation);
+
+        unWeightedRelation = new Relation(Direction.UNI_DIRECTION);
+
+        graph.addEdge(5,6, unWeightedRelation);
 
 
-        Relation weightedRelation = null;
-
-        weightedRelation = new Relation(Direction.OUT_GOING);
-
-        graph.addEdge(0, 1, weightedRelation);
-        graph.addEdge(1,2, weightedRelation);
-        graph.addEdge(2,3, weightedRelation);
-        graph.addEdge(3,4, weightedRelation);
-        graph.addEdge(4,5, weightedRelation);
-        graph.addEdge(4, 6, weightedRelation);
+        //if youre using a GraphMap, it returns NodeMap object
+        NodeList<String> node = graph.getNode(1);
 
         graph.print();
 
-        System.out.println(graph.getNode(1).relations(0));
+        System.out.println(node.data());
+
         long finish = System.currentTimeMillis();
         long timeElapsed = finish - start;
         double seconds = (double) timeElapsed / 1000;

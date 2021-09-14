@@ -1,5 +1,7 @@
 package Graph;
 
+import Graph.Query.Query;
+
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
@@ -19,6 +21,8 @@ abstract  class AbstractGraph<T extends Node<K>, K> {
     protected abstract T create(K element, int id);
 
     protected int defaultMaxRelationPerNode = 100;
+
+    public final Query<K> query = new Query<>();
 
     abstract AbstractGraph<T, K> copy();
 
@@ -48,7 +52,15 @@ abstract  class AbstractGraph<T extends Node<K>, K> {
         return id;
     }
 
-    public void add(K firstElement, K secondElement, AbstractRelation relation){
+
+    /**
+     * creates two nodes and creates an edge between them
+     * @param firstElement The data of the first node
+     * @param secondElement The data of the second node
+     * @param relation The relation between them
+      *@return int[] array containing The node ids, arr[0] is the firstElement arr[1] is the secondElement
+     */
+    public int[] add(K firstElement, K secondElement, AbstractRelation relation){
 
         if(firstElement == null || secondElement == null){
             throw new NoElementException("Graph add(T firstElement, T secondElement) : elements cannot be null");
@@ -63,13 +75,15 @@ abstract  class AbstractGraph<T extends Node<K>, K> {
         graph.get(v).add(u,  relation.reverseDirection());
 
         this.totalRelations++;
+
+        return new int[]{u,v};
     }
 
 
     /**
      * Creates an edge between two nodes, does <b>nothing</b> if node does not exist
      * @param u The first node's id
-     * @param v The second node's od
+     * @param v The second node's id
      * @param relation Relation object to describe the relation between the nodes
      */
     public void addEdge(int u, int v, AbstractRelation relation){
@@ -241,7 +255,7 @@ abstract  class AbstractGraph<T extends Node<K>, K> {
     }
 
     /**
-     * Update the first node by its id
+     * Update the node by its id
      * @param id The element's id
      * @param data The new data
      */
@@ -288,7 +302,7 @@ abstract  class AbstractGraph<T extends Node<K>, K> {
 
                 for(Integer relationKey : iterator ){
 
-                    List<AbstractRelation> relations = node.relations(relationKey);
+                    List<AbstractRelation> relations = node.relation(relationKey);
 
                     for(AbstractRelation relation :  relations){
                         System.out.printf("( %d %s %d ) ",key, relation.printDirection(),relationKey);
@@ -305,7 +319,7 @@ abstract  class AbstractGraph<T extends Node<K>, K> {
 
     /**
      *
-     * @return total elements in the graph
+     * @return total nodes in the graph
      */
     public int size(){
         return totalNodes;
@@ -350,7 +364,7 @@ abstract  class AbstractGraph<T extends Node<K>, K> {
      * Get all nodes that have no edges
      * @return List of Node's
      */
-    public List<T> getNoEdgeNodes(){
+        public List<T> getNoEdgeNodes(){
 
         List<T> list = new ArrayList<>();
 
@@ -476,7 +490,7 @@ abstract  class AbstractGraph<T extends Node<K>, K> {
                 //stream filter for direction other than NO_DIRECTION
                 boolean hasDirection =
                         graph.get(key)
-                        .relations(element)
+                        .relation(element)
                         .stream()
                         .anyMatch(rel -> rel.direction() != Direction.NO_DIRECTION);
 
@@ -530,6 +544,16 @@ abstract  class AbstractGraph<T extends Node<K>, K> {
         return getRelationNodes(id,includeSelf, filter);
     }
 
+    /**
+     * Returns all nodes in this graph adjacent to node
+     * which can be reached by traversing node's <i>uni direction</i>
+     * edges.
+     *
+     * @param id The node's id
+     * @param includeSelf whether to include loop relations or not
+     *                    (node that has a relation with itself)
+     * @return Set of Nodes or Empty Set if no Node or Relation is found
+     */
     public Set<T> uniDirectionEdges(int id, boolean includeSelf){
 
         Predicate<AbstractRelation> filter =
@@ -562,7 +586,7 @@ abstract  class AbstractGraph<T extends Node<K>, K> {
 
             List<AbstractRelation> outGoingRelations =
                     node
-                    .relations(relationId)
+                    .relation(relationId)
                     .stream()
                     .filter(filter).toList();
 

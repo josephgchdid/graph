@@ -54,7 +54,7 @@ public class NodeMap<T> extends Node<T> {
     }
 
     @Override
-    public List<AbstractRelation> relations(int key) {
+    public List<AbstractRelation> relation(int key) {
        return List.of(vertex.get(key));
     }
 

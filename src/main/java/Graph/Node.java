@@ -1,7 +1,4 @@
 package Graph;
-
-
-
 import java.util.List;
 
 class Node<T>{
@@ -18,12 +15,21 @@ class Node<T>{
 
     private int hCost = 0;
 
+    private String type;
+
     public Node(){}
 
     public Node(T data, int ID) {
+
         this.data = data;
+
         this.ID = ID;
+
+        this.type = data.getClass().getSimpleName();
+
     }
+
+    public String type(){ return  type; }
 
     public T data() {
         return data;
@@ -80,7 +86,7 @@ class Node<T>{
      * @param key The node's id
      * @return List of Relation objects
      */
-    public List<AbstractRelation> relations(int key) {
+    public List<AbstractRelation> relation(int key) {
         return null;
     }
 
